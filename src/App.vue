@@ -2,17 +2,19 @@
 import _ from "lodash";
 import { computed, onMounted, reactive, toRefs } from "vue";
 import { ElMessage } from "element-plus";
-
+// 优先被选中的数字的个数(避免硬编码 提前定义)
 const TOP_COUNT = 10;
+// 所有数字的个数(避免硬编码 提前定义)
 const ALL_COUNT = 200;
+// 状态集合
 const state = reactive({
-  topNumbers: [],
-  topNumbersCopy: [],
-  allNumbers: [],
-  restNumbers: [], // 剩余的数字
-  number: "",
-  luckyNumber: "",
-  isEnough: false,
+  topNumbers: [], // 优先数字的集合
+  topNumbersCopy: [], // 优先数字集合的副本
+  allNumbers: [], // 所有数字的集合
+  restNumbers: [], // 剩余的数字的集合
+  number: "", // 当前输入框输入的数字
+  luckyNumber: "", // 被选中的幸运数字
+  isEnough: false, // topNumbers的个数是否够TOP_COUNT
 });
 
 onMounted(() => {
@@ -24,6 +26,13 @@ onMounted(() => {
   state.allNumbers = temp;
 });
 
+// 获取剩余数字的Array
+state.restNumbers = computed(() => {
+  console.log(state.topNumbers);
+  return state.allNumbers.filter((x) => !state.topNumbers.includes(x));
+});
+
+// 
 const addNumber = () => {
   if (state.topNumbers.length == TOP_COUNT) {
     ElMessage(`够${TOP_COUNT}个数字了，不用再添加了`);
@@ -85,11 +94,6 @@ const choujiangHandle = () => {
   }
 };
 
-// 获取剩余数字的Array
-state.restNumbers = computed(() => {
-  console.log(state.topNumbers);
-  return state.allNumbers.filter((x) => !state.topNumbers.includes(x));
-});
 </script>
 
 <template>
